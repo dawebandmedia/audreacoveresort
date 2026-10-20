@@ -1,0 +1,5 @@
+import {auth,rpc} from './supabase-client.js';
+const form=document.querySelector('#login-form'),error=document.querySelector('#login-error'),button=document.querySelector('#sign-in');
+const showError=text=>{error.replaceChildren();const p=document.createElement('p');p.className='error-box';p.textContent=text;error.append(p);};
+document.querySelector('#show-password').addEventListener('click',e=>{const input=form.elements.namedItem('password'),visible=input.type==='password';input.type=visible?'text':'password';e.target.textContent=visible?'Hide':'Show';e.target.setAttribute('aria-label',visible?'Hide password':'Show password');});
+form.addEventListener('submit',async e=>{e.preventDefault();button.disabled=true;button.textContent='Opening your cove…';error.replaceChildren();try{await auth.login(form.elements.namedItem('email').value,form.elements.namedItem('password').value);await rpc('ac_workspace',{},true);location.replace('./admin.html');}catch(e){form.elements.namedItem('password').value='';showError(e.message);button.disabled=false;button.textContent='Sign in to management ↗';}});
